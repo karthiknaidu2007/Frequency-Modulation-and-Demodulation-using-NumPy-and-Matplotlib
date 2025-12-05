@@ -21,11 +21,67 @@ Frequency Modulation (FM) is a method of transmitting information over a carrier
 6.	Plot the Signals: Use Matplotlib to plot the message signal, carrier signal, and modulated signal.
 
 ### PROGRAM
-
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from scipy.signal import hilbert
+    
+    Am = 7.3
+    fm = 713
+    fs = 713000
+    Ac = 14.6
+    fc = 7130
+    b = 5
+    
+    t = np.arange(0, 2/fm, 1/fs)
+    
+    m = Am * np.cos(2 * np.pi * fm * t)
+    c = Ac * np.cos(2 * np.pi * fc * t)
+    s = Ac * np.cos(2 * np.pi * fc * t + b * np.sin(2 * np.pi * fm * t))
+    
+    
+    ds = np.diff(s)
+    analytic_signal = hilbert(ds) 
+    envelope = np.abs(analytic_signal) 
+    demod = envelope - np.mean(envelope)  
+    demod = demod / np.max(np.abs(demod)) * Am 
+    
+    plt.figure(figsize=(10,8))
+    
+    plt.subplot(4,1,1)
+    plt.plot(t, m)
+    plt.title("Message Signal")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude")
+    
+    plt.subplot(4,1,2)
+    plt.plot(t, c)
+    plt.title("Carrier Signal")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude")
+    
+    plt.subplot(4,1,3)
+    plt.plot(t, s)
+    plt.title("Frequency Modulated Signal (FM)")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude")
+    
+    plt.subplot(4,1,4)
+    plt.plot(t[:-1], demod)  # ds shortens length by 1
+    plt.title("Demodulated Signal (Recovered Message)")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude")
+    
+    plt.tight_layout()
+    plt.show()
 
 ### TABULATION
+![WhatsApp Image 2025-12-05 at 23 48 27_2bd74281](https://github.com/user-attachments/assets/4c2db743-c72e-4a21-9273-5f60f2e426a4)
+
+## CALCULATION
+![WhatsApp Image 2025-12-05 at 23 48 42_bd644a58](https://github.com/user-attachments/assets/57327da4-44a8-4dac-b92f-8450662ea255)
 
 ### OUTPUT
-   
-### RESULT
+   <img width="405" height="292" alt="image" src="https://github.com/user-attachments/assets/6a3354de-ecb7-436b-a65e-386c129f518b" />
 
+### RESULT
+The message signal, carrier signal, and frequency modulated (FM) signal will be displayed in separate plots. The modulated signal will show frequency variations corresponding to the amplitude of the message signal.
